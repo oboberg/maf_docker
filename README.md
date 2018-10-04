@@ -57,3 +57,35 @@ will want to use when running MAF.
 ~~~
 docker run -it maf:20181004
 ~~~
+
+### Run the `run_all.py` batch in MAF
+
+In the `bin` directory there is a script, that when mounted in a MAF docker image
+will run `run_all.py` from MAF, and save the output to your local machine. For this
+example we will assume we have a local directory called `maf_local` and in the directory
+is a run directory and its run database.
+
+~~~
+mkdir maf_local
+cd maf_local
+mkdir -p pontus_2556/data
+mv pontus_2556.db pontus_2556/data/pontus_2556 (or moved it from where ever you might have it)
+~~~
+
+Now you need to make sure that the `bin/setup_runall.sh` script is in the `maf_local`
+directory, so if you did `ls` you would see the folowing:
+
+~~~
+pontus_2556/ setup_runall.sh
+~~~
+
+If this is all setup up correctly you can use a docker run command similar to this
+to run the metrics in a non-interactive docker container. In this command replace
+`/home/oboberg` with the full path to your `maf_local` directory and change `oboberg/maf:latest`
+to the MAF docker image you would like to use.
+
+~~~
+docker run --rm -v /home/oboberg/maf_local/:/home/docmaf/maf_local \
+                   oboberg/maf:latest \
+                   /home/docmaf/maf_local/setup_runall.sh -r pontus_2556 &
+~~~
